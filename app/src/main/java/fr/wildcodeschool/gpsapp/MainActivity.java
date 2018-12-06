@@ -30,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
         LocationListener locationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                Toast.makeText(MainActivity.this, location.toString(), Toast.LENGTH_SHORT)
-                        .show();
+                SingleToast.show(MainActivity.this, location.toString(), Toast.LENGTH_SHORT);
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {}
