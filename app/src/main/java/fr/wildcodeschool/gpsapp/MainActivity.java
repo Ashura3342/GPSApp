@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LocationListener{
 
     private LocationManager mLocationManager = null;
 
@@ -25,24 +25,34 @@ public class MainActivity extends AppCompatActivity {
         checkPermission();
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        SingleToast.show(MainActivity.this, location.toString(), Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
     @SuppressLint("MissingPermission")
     private void initLocation() {
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                SingleToast.show(MainActivity.this, location.toString(), Toast.LENGTH_SHORT);
-            }
 
-            public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-            public void onProviderEnabled(String provider) {}
-
-            public void onProviderDisabled(String provider) {}
-        };
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                0, 0, locationListener);
+                0, 0, MainActivity.this);
         mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                0, 0, locationListener);
+                0, 0, MainActivity.this);
     }
 
     private void checkPermission() {
@@ -95,4 +105,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if ( mLocationManager != null) {
+            mLocationManager.removeUpdates(this);
+            SingleToast.cancel();
+        }
+        super.onDestroy();
+    }
 }

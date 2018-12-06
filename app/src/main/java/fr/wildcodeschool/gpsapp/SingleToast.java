@@ -12,4 +12,11 @@ public class SingleToast {
         mToast = Toast.makeText(context, text, duration);
         mToast.show();
     }
+
+    public static void cancel() {
+        if (mToast != null) {
+            mToast.cancel();
+            mToast = null;
+        }
+    }
 }
