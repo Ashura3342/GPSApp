@@ -7,11 +7,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity implements LocationListener{
@@ -22,7 +21,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    protected void onResume() {
         checkPermission();
+        super.onResume();
     }
 
     @Override
@@ -47,7 +51,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
 
     @SuppressLint("MissingPermission")
     private void initLocation() {
-        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (mLocationManager == null)
+            mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
         mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
                 0, 0, MainActivity.this);
@@ -106,11 +111,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         if ( mLocationManager != null) {
             mLocationManager.removeUpdates(this);
             SingleToast.cancel();
         }
-        super.onDestroy();
+        super.onStop();
     }
 }
